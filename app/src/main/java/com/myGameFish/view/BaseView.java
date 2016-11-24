@@ -1,5 +1,6 @@
 package com.myGameFish.view;
 import com.myGameFish.activity.MainActivity;
+import com.myGameFish.souds.GameSoundPool;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -18,10 +19,12 @@ public class BaseView extends SurfaceView implements SurfaceHolder.Callback,Runn
 	protected Canvas canvas; 				// 画布对象
 	protected Thread thread; 				// 绘图线程
 	protected SurfaceHolder sfh;
+	protected GameSoundPool sounds;
 	protected MainActivity mainActivity;
 	// 构造方法
-	public BaseView(Context context) {
+	public BaseView(Context context,GameSoundPool sounds) {
 		super(context);
+		this.sounds = sounds;
 		// TODO Auto-generated constructor stub
 		this.mainActivity = (MainActivity) context;
 		sfh = this.getHolder();

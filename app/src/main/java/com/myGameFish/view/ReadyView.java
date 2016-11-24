@@ -2,6 +2,7 @@ package com.myGameFish.view;
 
 import com.myGameFish.constant.ConstantUtil;
 import com.myGameFish.activity.R;
+import com.myGameFish.souds.GameSoundPool;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -26,13 +27,12 @@ public class ReadyView extends BaseView{
 	private boolean isBtChange2;
 	private String startGame = "开始游戏";	// 按钮的文字
 	private String exitGame = "退出游戏";
-	//private Bitmap text;					// 文字图片
 	private Bitmap button;					// 按钮图片
 	private Bitmap button2;					// 按钮图片
 	private Bitmap background;				// 背景图片
 	private Rect rect;						// 绘制文字的区域
-	public ReadyView(Context context) {
-		super(context);
+	public ReadyView(Context context,GameSoundPool sounds) {
+		super(context,sounds);
 		// TODO Auto-generated constructor stub
 		paint.setTextSize(40);
 		rect = new Rect();
@@ -72,6 +72,7 @@ public class ReadyView extends BaseView{
 			//判断第一个按钮是否被按下
 			if (x > button_x && x < button_x + button.getWidth()
 					&& y > button_y && y < button_y + button.getHeight()) {
+				sounds.playSound(8,0);
 				isBtChange = true;
 				drawSelf();
 				mainActivity.getHandler().sendEmptyMessage(ConstantUtil.TO_MAIN_VIEW);
@@ -79,6 +80,7 @@ public class ReadyView extends BaseView{
 			//判断第二个按钮是否被按下
 			else if (x > button_x && x < button_x + button.getWidth()
 					&& y > button_y2 && y < button_y2 + button.getHeight()) {
+				sounds.playSound(8,0);
 				isBtChange2 = true;
 				drawSelf();
 				mainActivity.getHandler().sendEmptyMessage(ConstantUtil.END_GAME);
@@ -120,8 +122,6 @@ public class ReadyView extends BaseView{
 		button2 = BitmapFactory.decodeResource(getResources(),R.drawable.button2);
 		scalex = screen_width / background.getWidth();
 		scaley = screen_height / background.getHeight();
-		//text_x = screen_width / 2 - text.getWidth() / 2;
-		//text_y = screen_height / 2 - text.getHeight();
 		button_x = screen_width / 2 - button.getWidth() / 2;
 		button_y = screen_height / 2 + button.getHeight();
 		button_y2 = button_y + button.getHeight() + 40;

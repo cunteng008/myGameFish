@@ -2,6 +2,7 @@ package com.myGameFish.view;
 import com.myGameFish.constant.ConstantUtil;
 import com.myGameFish.activity.MainActivity;
 import com.myGameFish.activity.R;
+import com.myGameFish.souds.GameSoundPool;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -27,8 +28,8 @@ public class EndView extends BaseView{
 	private Bitmap background;				// 背景图片
 	private Rect rect;						// 绘制文字的区域
 	private MainActivity mainActivity;
-	public EndView(Context context) {
-		super(context);
+	public EndView(Context context,GameSoundPool sounds) {
+		super(context,sounds);
 		// TODO Auto-generated constructor stub
 		this.mainActivity = (MainActivity)context;
 		rect = new Rect();
@@ -72,6 +73,7 @@ public class EndView extends BaseView{
 					&& y > button_y && y < button_y + button.getHeight())
 			{
 				isBtChange = true;
+				sounds.playSound(8,0);
 				drawSelf();
 				mainActivity.getHandler().sendEmptyMessage(ConstantUtil.TO_MAIN_VIEW);
 			}
@@ -80,6 +82,7 @@ public class EndView extends BaseView{
 					&& y > button_y2 && y < button_y2 + button.getHeight())
 			{
 				isBtChange2 = true;
+				sounds.playSound(8,0);
 				drawSelf();
 				threadFlag = false;
 				mainActivity.getHandler().sendEmptyMessage(ConstantUtil.END_GAME);

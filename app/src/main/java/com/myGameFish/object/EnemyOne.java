@@ -55,11 +55,8 @@ public class EnemyOne extends EnemyFish {
 	// 初始化图片资源
 	@Override
 	public void initBitmap() {
-
-			enemyOnes.add(BitmapFactory.decodeResource(resources, R.drawable.enemy_0101));
-			enemyOnes.add(BitmapFactory.decodeResource(resources, R.drawable.enemy_0102));
-
-
+		enemyOnes.add(BitmapFactory.decodeResource(resources, R.drawable.enemy_0101));
+		enemyOnes.add(BitmapFactory.decodeResource(resources, R.drawable.enemy_0102));
 		enemyOne = enemyOnes.get(0);
 		object_width = enemyOne.getWidth();			//获得每一帧位图的宽
 		object_height = enemyOne.getHeight()/5;		//获得每一帧位图的高
@@ -85,8 +82,11 @@ public class EnemyOne extends EnemyFish {
 	// 释放资源
 	@Override
 	public void release() {
-		if(!enemyOne.isRecycled()){
-			enemyOne.recycle();
+
+		for(int i=0;i<enemyOnes.size();i++){
+			if(!enemyOnes.get(0).isRecycled()) {
+				enemyOnes.get(0).recycle();
+			}
 		}
 	}
 }

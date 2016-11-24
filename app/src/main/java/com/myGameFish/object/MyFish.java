@@ -21,6 +21,7 @@ public class MyFish extends GameObject implements IMyFish {
 	private MainView mainView;
 	//private GameObjectFactory factory;
 	private  double scale = 1;    //缩放倍数
+	private double increaseScale = 0.1;
 	private boolean isWin = false;
 	private List<Bitmap> myFishs = new ArrayList<Bitmap>();
 
@@ -81,8 +82,10 @@ public class MyFish extends GameObject implements IMyFish {
 	// 释放资源的方法
 	@Override
 	public void release() {
-		if(!myfish.isRecycled()){
-			myfish.recycle();
+		for(int i=0;i<myFishs.size();i++){
+			if(!myFishs.get(0).isRecycled()) {
+				myFishs.get(0).recycle();
+			}
 		}
 	}
 
@@ -111,7 +114,7 @@ public class MyFish extends GameObject implements IMyFish {
 
 	public void amplify(){
         /* 放大变量 */
-		scale += 0.5;
+		scale += increaseScale;
         /* 产生resize后的Bitmap对象 */
 		Matrix matrix = new Matrix();
 		if(!isWin){

@@ -7,15 +7,18 @@ import com.myGameFish.constant.ConstantUtil;
 import com.myGameFish.factory.GameObjectFactory;
 import com.myGameFish.activity.R;
 import com.myGameFish.object.EnemyFish;
+import com.myGameFish.object.EnemyThree;
 import com.myGameFish.object.EnemyTwo;
 import com.myGameFish.object.GameObject;
 import com.myGameFish.object.MyFish;
 import com.myGameFish.object.EnemyOne;
+import com.myGameFish.souds.GameSoundPool;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.SoundPool;
 import android.os.Message;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -35,10 +38,12 @@ public class MainView extends BaseView{
 	private MyFish myFish;		// 玩家的鱼
 	private List<EnemyFish> enemyFishs;
 	private GameObjectFactory factory;
-	private int levelsScore[] = {2000,30000,5000,8000,12000};
+	private int levelsScore[] = {2000,4000,8000,16000,3200};
 	private int levelsIndex = 0;
-	public MainView(Context context) {
-		super(context);
+	public MainView(Context context,GameSoundPool sounds) {
+		super(context,sounds);
+		//背景音乐播放停不下来
+		//sounds.playSound(6,-1);
 		isPlay = true;
 		speedTime = 1;
 		factory = new GameObjectFactory();						  //工厂类
@@ -57,6 +62,11 @@ public class MainView extends BaseView{
 			EnemyTwo enemyTwo = (EnemyTwo) factory.createEnemyTwo(getResources());
 			enemyFishs.add(enemyTwo);
 		}
+		for(int i = 0; i < EnemyTwo.sumCount;i++){
+			//生产敌人三号鱼
+			EnemyThree enemyThree = (EnemyThree) factory.createEnemyThree(getResources());
+			enemyFishs.add(enemyThree);
+		}
 		thread = new Thread(this);
 	}
 	// 视图改变的方法
@@ -68,6 +78,7 @@ public class MainView extends BaseView{
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
 		super.surfaceCreated(arg0);
+		sounds.playSound(7,1);
 		initBitmap(); // 初始化图片资源
 		for(GameObject obj: enemyFishs){
 			obj.setScreenWH(screen_width,screen_height);
@@ -177,12 +188,19 @@ public class MainView extends BaseView{
 					obj.initial(speedTime,0,0);
 					break;
 				}
-			} else if(obj instanceof EnemyTwo){  //初始化中型敌机
+			} else if(obj instanceof EnemyTwo){  //初始化敌人二号鱼
 
 					if(!obj.isAlive()){
 						obj.initial(speedTime,0,0);
 						break;
 					}
+
+			} else if(obj instanceof EnemyThree){  //初始化敌人三号鱼
+
+				if(!obj.isAlive()){
+					obj.initial(speedTime,0,0);
+					break;
+				}
 
 			}
 		}
@@ -223,9 +241,12 @@ public class MainView extends BaseView{
 			//绘制按钮
 			canvas.save();
 			canvas.clipRect(10, 10, 10 + play_bt_w,10 + play_bt_h);
-
-			canvas.drawBitmap(playButton, 10, 10, paint);
-
+			if(isPlay){
+				canvas.drawBitmap(playButton, 10, 10, paint);
+			}
+			else{
+				canvas.drawBitmap(playButton, 10, 10 - play_bt_h, paint);
+			}
 			canvas.restore();
 
 			//绘制敌人的鱼
@@ -237,14 +258,17 @@ public class MainView extends BaseView{
 						if(obj.isCollide(myFish)){
 							if(myFish.isBiggerMe(obj.getObject_width())){
 								myFish.setAlive(false);
+								sounds.playSound(4,0);
 							}
 							else{
+								sounds.playSound(1,0);
 								sumScore += obj.getScore();
 								if(sumScore >= levelsScore[levelsIndex]){
 									myFish.amplify();
+									sounds.playSound(5,0);
 									levelsIndex++;
 									speedTime++;
-									if(levelsIndex>levelsScore.length){
+									if(speedTime == 5){
 										//胜利结束游戏
 										myFish.setAlive(false);
 									}

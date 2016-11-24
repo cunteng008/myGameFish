@@ -1,6 +1,7 @@
 package com.myGameFish.activity;
 
 import com.myGameFish.constant.ConstantUtil;
+import com.myGameFish.souds.GameSoundPool;
 import com.myGameFish.view.EndView;
 import com.myGameFish.view.MainView;
 import com.myGameFish.view.ReadyView;
@@ -18,6 +19,7 @@ public class MainActivity extends Activity {
 	private EndView endView;
 	private MainView mainView;
 	private ReadyView readyView;
+	private GameSoundPool sounds;
 	private Handler handler = new Handler(){
 		@Override
 		public void handleMessage(Message msg){
@@ -38,14 +40,15 @@ public class MainActivity extends Activity {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-		readyView = new ReadyView(this);
+		sounds = new GameSoundPool(this);
+		sounds.initGameSound();
+		readyView = new ReadyView(this,sounds);
 		setContentView(readyView);
 	}
 	//显示游戏的主界面
 	public void toMainView(){
 		if(mainView == null){
-			mainView = new MainView(this);
+			mainView = new MainView(this,sounds);
 		}
 		setContentView(mainView);
 		readyView = null;
@@ -54,7 +57,7 @@ public class MainActivity extends Activity {
 	//显示游戏结束的界面
 	public void toEndView(int score){
 		if(endView == null){
-			endView = new EndView(this);
+			endView = new EndView(this,sounds);
 			endView.setScore(score);
 		}
 		setContentView(endView);
@@ -79,5 +82,12 @@ public class MainActivity extends Activity {
 	}
 	public void setHandler(Handler handler) {
 		this.handler = handler;
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		Log.d("mainActivity","mainActivity 被销毁");
+		super.onDestroy();
 	}
 }
