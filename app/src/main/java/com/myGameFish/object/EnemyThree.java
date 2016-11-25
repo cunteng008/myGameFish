@@ -18,7 +18,7 @@ import java.util.Random;
 public class EnemyThree extends EnemyFish {
     private static int currentCount = 0;	 //	对象当前的数量
     private Bitmap enemyThree;  // 对象图片
-    public static int sumCount = 2;	 	 	 //	屏幕上对象总的数量，若少于则生成新的鱼
+    public static int sumCount = 0;	 	 	 //	屏幕上对象总的数量，若少于则生成新的鱼
     private List<Bitmap> enemyThrees = new ArrayList<Bitmap>();
     private int index = 0;
     public EnemyThree(Resources resources) {
@@ -41,7 +41,7 @@ public class EnemyThree extends EnemyFish {
         isAlive = true;
         currentFrame = 0;
         Random ran = new Random();
-        speed = ran.nextInt(8) + 8 * arg0;
+        speed = ran.nextInt(6) + 6 * arg0;
         //以防敌人的鱼隐藏在边以外
         if(isAppearOnRight){
             object_y = ran.nextInt((int)(screen_height - object_height));

@@ -38,7 +38,8 @@ public class MainView extends BaseView{
 	private MyFish myFish;		// 玩家的鱼
 	private List<EnemyFish> enemyFishs;
 	private GameObjectFactory factory;
-	private int levelsScore[] = {2000,4000,8000,16000,3200};
+	//游戏一共分为5个等级分数
+	private int levelsScore[] = {2000,4000,8000,16000,32000};
 	private int levelsIndex = 0;
 	public MainView(Context context,GameSoundPool sounds) {
 		super(context,sounds);
