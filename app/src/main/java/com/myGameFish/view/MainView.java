@@ -10,6 +10,7 @@ import com.myGameFish.object.EnemyFish;
 import com.myGameFish.object.EnemyThree;
 import com.myGameFish.object.EnemyTwo;
 import com.myGameFish.object.GameObject;
+import com.myGameFish.object.MissileGoods;
 import com.myGameFish.object.MyFish;
 import com.myGameFish.object.EnemyOne;
 import com.myGameFish.souds.GameSoundPool;
@@ -18,6 +19,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Message;
 import android.view.MotionEvent;
@@ -38,13 +40,16 @@ public class MainView extends BaseView{
 	private MyFish myFish;		// 玩家的鱼
 	private List<EnemyFish> enemyFishs;
 	private GameObjectFactory factory;
+	private MissileGoods missileGoods;
+	private MediaPlayer mp;
 	//游戏一共分为5个等级分数
-	private int levelsScore[] = {2000,4000,8000,16000,32000};
+	private int levelsScore[] = {10000,30000,70000,150000};
 	private int levelsIndex = 0;
 	public MainView(Context context,GameSoundPool sounds) {
 		super(context,sounds);
-		//背景音乐播放停不下来
-		//sounds.playSound(6,-1);
+		//为什么传context
+		mp = MediaPlayer.create(context,  R.raw.audios_bg);
+		mp.setLooping(true);
 		isPlay = true;
 		speedTime = 1;
 		factory = new GameObjectFactory();						  //工厂类
@@ -63,11 +68,13 @@ public class MainView extends BaseView{
 			EnemyTwo enemyTwo = (EnemyTwo) factory.createEnemyTwo(getResources());
 			enemyFishs.add(enemyTwo);
 		}
-		for(int i = 0; i < EnemyTwo.sumCount;i++){
+		for(int i = 0; i < EnemyThree.sumCount;i++){
 			//生产敌人三号鱼
 			EnemyThree enemyThree = (EnemyThree) factory.createEnemyThree(getResources());
 			enemyFishs.add(enemyThree);
 		}
+		//生产导弹物品
+		missileGoods = (MissileGoods) factory.createMissileGoods(getResources());
 		thread = new Thread(this);
 	}
 	// 视图改变的方法
@@ -79,6 +86,8 @@ public class MainView extends BaseView{
 	@Override
 	public void surfaceCreated(SurfaceHolder arg0) {
 		super.surfaceCreated(arg0);
+		mp.start();
+		//sounds.createSoundPool();
 		sounds.playSound(7,1);
 		initBitmap(); // 初始化图片资源
 		for(GameObject obj: enemyFishs){
@@ -113,9 +122,11 @@ public class MainView extends BaseView{
 			if(x > 10 && x < 10 + play_bt_w && y > 10 && y < 10 + play_bt_h){
 				if(isPlay){
 					isPlay = false;
+					mp.pause();
 				}
 				else{
 					isPlay = true;
+					mp.start();
 					synchronized(thread){
 						thread.notify();
 					}
@@ -138,23 +149,23 @@ public class MainView extends BaseView{
 			if(isTouchFish){
 				float x = event.getX();
 				float y = event.getY();
-				if(x > myFish.getMiddle_x() + 5){
+				if(x > myFish.getMiddle_x() + 20){
 					if(myFish.getMiddle_x() + myFish.getSpeed() <= screen_width){
 						myFish.setMiddle_x(myFish.getMiddle_x() + myFish.getSpeed());
 					}
 				}
-				else if(x < myFish.getMiddle_x() - 5){
+				else if(x < myFish.getMiddle_x() - 20){
 					if(myFish.getMiddle_x() - myFish.getSpeed() >= 0){
 						myFish.setMiddle_x(myFish.getMiddle_x() - myFish.getSpeed());
 					}
 				}
-				if(y > myFish.getMiddle_y() + 5){
+				if(y > myFish.getMiddle_y() + 20){
 					if(myFish.getMiddle_y() + myFish.getSpeed() <= screen_height){
 						myFish.turnAround(0);
 						myFish.setMiddle_y(myFish.getMiddle_y() + myFish.getSpeed());
 					}
 				}
-				else if(y < myFish.getMiddle_y() - 5){
+				else if(y < myFish.getMiddle_y() - 20){
 					if(myFish.getMiddle_y() - myFish.getSpeed() >= 0){
 						myFish.turnAround(1);
 						myFish.setMiddle_y(myFish.getMiddle_y() - myFish.getSpeed());
@@ -202,13 +213,17 @@ public class MainView extends BaseView{
 					obj.initial(speedTime,0,0);
 					break;
 				}
-
 			}
 		}
+			if(!missileGoods.isAlive()){
+				missileGoods.initial(0,0,0);
+			}
+
 		//提升等级
 		if(sumScore >= speedTime*100000 && speedTime < 6){
 			speedTime++;
 		}
+
 	}
 	// 释放图片资源的方法
 	@Override
@@ -226,7 +241,7 @@ public class MainView extends BaseView{
 		if(!background2.isRecycled()){
 			background2.recycle();
 		}
-
+		mp.release();
 	}
 	// 绘图方法
 	@Override
@@ -283,7 +298,6 @@ public class MainView extends BaseView{
 			if(!myFish.isAlive()){
 				threadFlag = false;
 			}
-
 			myFish.drawSelf(canvas);	//绘制玩家的飞机
 			//绘制积分文字
 			paint.setTextSize(30);

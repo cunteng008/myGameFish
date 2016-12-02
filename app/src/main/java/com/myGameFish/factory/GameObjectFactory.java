@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import com.myGameFish.object.EnemyThree;
 import com.myGameFish.object.EnemyTwo;
 import com.myGameFish.object.GameObject;
+import com.myGameFish.object.MissileGoods;
 import com.myGameFish.object.MyFish;
 import com.myGameFish.object.EnemyOne;
 /*游戏对象的工厂类*/
@@ -24,5 +25,9 @@ public class GameObjectFactory {
 	//创建玩家鱼的方法
 	public GameObject createMyFish(Resources resources){
 		return new MyFish(resources);
+	}
+	//创建果实
+	public GameObject createMissileGoods(Resources resources){
+		return new MissileGoods(resources);
 	}
 }

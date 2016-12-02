@@ -9,6 +9,8 @@ import android.media.SoundPool;
 import com.myGameFish.activity.MainActivity;
 import com.myGameFish.activity.R;
 
+import static android.util.JsonToken.NULL;
+
 public class GameSoundPool {
 	private MainActivity mainActivity;
 	private SoundPool soundPool;
@@ -36,5 +38,14 @@ public class GameSoundPool {
 		float stramMaxVolumeCurrent = am.getStreamVolume(AudioManager.STREAM_MUSIC);
 		float volume = stramVolumeCurrent/stramMaxVolumeCurrent;
 		soundPool.play(map.get(sound), volume, volume, 1, loop, 1.0f);	
+	}
+	public void stopSound(int sound){
+		//PlaySound(NULL,NULL,NULL);
+	}
+	public void realseSoundPool(){
+		soundPool.release();
+	}
+	public void createSoundPool(){
+		soundPool = new SoundPool(10,AudioManager.STREAM_MUSIC,0);
 	}
 }

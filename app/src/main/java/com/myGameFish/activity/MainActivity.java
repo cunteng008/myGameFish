@@ -88,6 +88,7 @@ public class MainActivity extends Activity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		Log.d("mainActivity","mainActivity 被销毁");
+		sounds.realseSoundPool();
 		super.onDestroy();
 	}
 }

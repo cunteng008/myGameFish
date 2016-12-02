@@ -12,7 +12,6 @@ public class EnemyFish extends GameObject{
 	protected boolean isAppearOnRight = true;
 	public EnemyFish(Resources resources) {
 		super(resources);
-
 	}
 	//初始化数据
 	@Override
